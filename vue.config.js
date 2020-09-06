@@ -16,6 +16,8 @@ function resolve(dir) {
 
 const port = process.env.port || process.env.npm_config_port || 8081
 
+const name = '京西'
+
 module.exports = {
 
   /*
@@ -82,16 +84,14 @@ module.exports = {
   },
   css: {
     loaderOptions: {
-      stylus: {
-        'resolve url': true,
-        'import': []
+      postcss: {
+        plugins: [
+          require('postcss-px2rem')({
+            rootValue: 37.5,
+            propList: ['*']
+          })
+        ]
       }
-    }
-  },
-  pluginOptions: {
-    'cube-ui': {
-      postCompile: true,
-      theme: false
     }
   },
   // webpack的配置放在此处

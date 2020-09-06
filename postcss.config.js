@@ -1,7 +1,11 @@
 module.exports = {
   plugins: {
+    autoprefixer: {
+      browsers: ['Android >= 4.0', 'iOS >= 8']
+    },
     'postcss-px2rem': {
-      remUnit: 37.5
+      rootValue: 37.5,
+      propList: ['*']
     }
   }
 }
