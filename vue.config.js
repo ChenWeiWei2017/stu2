@@ -35,9 +35,64 @@ module.exports = {
     overlay: {
       warnings: false,
       errors: true
-    }
+    },
     // before: require('./mock/mock-server.js') mock注入
-
+    before(app) {
+      const userpool = [
+        { username: 'chenweiwei', password: '123456' },
+        { username: 'xiaod', password: 'root' }
+      ]
+      // 模拟注册接口
+      app.get('/api/register', (req, res) => {
+        const { username } = req.query
+        const isExist = userpool.some(v => v.username === username)
+        if (isExist) {
+          res.json({
+            code: -1,
+            message: '用户已存在'
+          })
+        } else {
+          res.json({
+            code: 200,
+            message: '注册成功'
+          })
+        }
+      })
+      // 模拟登陆接口
+      const tokenKey = 'xdclass'
+      app.post('/api/login', (req, res) => {
+        // post请求，参数在body中
+        const { username, password } = req.body
+        const success = userpool.some(u => u.username === username && u.password === password)
+        if (success) {
+          res.json({
+            code: 200,
+            message: '登陆成功',
+            // 模拟token生成
+            token: tokenKey + '-' + username + '-' + (new Date().getTime() + 60 * 60 * 1000)
+          })
+        } else {
+          res.json({
+            code: -1,
+            message: '账户名或密码错误'
+          })
+        }
+      })
+    }
+  },
+  css: {
+    loaderOptions: {
+      stylus: {
+        'resolve url': true,
+        'import': []
+      }
+    }
+  },
+  pluginOptions: {
+    'cube-ui': {
+      postCompile: true,
+      theme: false
+    }
   },
   // webpack的配置放在此处
   configureWebpack: {
